@@ -1,6 +1,6 @@
 # The Closest Bars
 
-A program which finds the biggest, the smallest and the nearest bars in Moscow.
+A program which finds the biggest, the smallest or the nearest bar in Moscow.
 
 # How to use
 
@@ -9,7 +9,7 @@ This script requires Python 3.5 (or higher) installed on your machine
 A launching on Linux:
 
 ```#!bash
-$ python bars.py # possibly requires call of python3 executive instead of just python
+$ python bars.py data.json # possibly requires call of python3 executive instead of just python
 Enter a longitude and a latitude: 37.657179 55.758637
 The biggest bar
 Name:          Спорт бар «Красная машина»
@@ -26,6 +26,11 @@ Phone number:  (495) 970-17-80
 ```
 
 The launch on Windows is similar.
+
+To download a file containing JSON information about bars use the following command
+```#!bash
+$ python download_bars_data.py data.json
+```
 
 # Project Goals
 

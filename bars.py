@@ -1,6 +1,5 @@
 import json
-import os
-import urllib.request
+import argparse
 from math import asin
 from math import sin
 from math import cos
@@ -70,15 +69,6 @@ def get_distance_to_bar(bar_data, longitude, latitude):
     )
 
 
-def fetch_data_from_web(api_key):
-    response = urllib.request.urlopen(
-        'https://apidata.mos.ru/v1/features/1796'
-        '?api_key={}'.format(api_key)
-    )
-    json_data = response.read()
-    return json_data
-
-
 def load_data(filepath):
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
@@ -87,60 +77,74 @@ def load_data(filepath):
         return None
 
 
-def get_biggest_bar(data):
+def get_biggest_bar(bars_data):
     return max(
-        get_bars_features(data),
+        get_bars_features(bars_data),
         key=lambda bar_data: get_bar_seats_count(bar_data)
     )
 
 
-def get_smallest_bar(data):
+def get_smallest_bar(bars_data):
     return min(
-        get_bars_features(data),
+        get_bars_features(bars_data),
         key=lambda bar_data: get_bar_seats_count(bar_data)
     )
 
 
-def get_closest_bar(data, longitude, latitude):
+def get_closest_bar(bars_data, longitude, latitude):
     return min(
-        get_bars_features(data),
+        get_bars_features(bars_data),
         key=lambda bar_data: get_distance_to_bar(
             bar_data, longitude, latitude
         )
     )
 
 
-if __name__ == '__main__':
-    bars_info = load_data('data.json')
-    if not bars_info:
-        api_key = os.environ.get('MOS_RU_API_KEY')
-        if not api_key:
-            exit(
-                'Please, set MOS_RU_API_KEY variable to fetch data about '
-                'bars from web or download it from mos.ru, name received '
-                'file as "data.json" and move it to the script directory'
-            )
-        bars_data = fetch_data_from_web(api_key)
-        if not bars_data:
-            exit('Connection problems')
-        with open('data.json', 'wb') as file:
-            file.write(bars_data)
-        bars_info = json.loads(bars_data, encoding='utf-8')
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='A program which finds the biggest, the smallest '
+                    'or the nearest bar in Moscow'
+    )
+    parser.add_argument(
+        'data_path',
+        help='A file which contains JSON information about bars'
+    )
+    return parser.parse_args()
 
+
+def parse_coordinates(coord_string):
     try:
         longitude, latitude = [
-            float(number) for number in input(
-                'Enter a longitude and a latitude: '
-            ).split()
+            float(number) for number in coord_string.split()
         ]
-        biggest = get_biggest_bar(bars_info)
-        smallest = get_smallest_bar(bars_info)
-        closest = get_closest_bar(bars_info, longitude, latitude)
-        print('The biggest bar')
-        print(get_bar_main_info(biggest))
-        print('The smallest bar')
-        print(get_bar_main_info(smallest))
-        print('The closest bar')
-        print(get_bar_main_info(closest))
+        return longitude, latitude
     except ValueError:
+        return None
+
+
+if __name__ == '__main__':
+    arguments = parse_arguments()
+    data_path = arguments.data_path
+    bars_data = load_data(data_path)
+    if not bars_data:
+        exit(
+            'Unable to read {}\n'
+            'To download it try the following command:\n'
+            'python download_bars_data.py {}'.format(
+                data_path, data_path
+            )
+        )
+    longitude, latitude = parse_coordinates(
+        input('Enter a longitude and a latitude: ')
+    )
+    if not longitude or not latitude:
         exit('Check input data')
+    biggest = get_biggest_bar(bars_data)
+    smallest = get_smallest_bar(bars_data)
+    closest = get_closest_bar(bars_data, longitude, latitude)
+    print('The biggest bar')
+    print(get_bar_main_info(biggest))
+    print('The smallest bar')
+    print(get_bar_main_info(smallest))
+    print('The closest bar')
+    print(get_bar_main_info(closest))
