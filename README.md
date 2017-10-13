@@ -31,6 +31,7 @@ To download a file containing JSON information about bars use the following comm
 ```#!bash
 $ python download_bars_data.py data.json
 ```
+Note, that you have to set **_MOS_RU_API_KEY_** environment variable to download using this script.
 
 # Project Goals
 

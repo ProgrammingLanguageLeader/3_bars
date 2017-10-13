@@ -7,6 +7,9 @@ from math import sqrt
 from math import radians
 
 
+EARTH_RADIUS = 6367
+
+
 def get_bars_features(bar_data):
     return bar_data['features']
 
@@ -58,7 +61,7 @@ def calculate_distance(longitude1, latitude1, longitude2, latitude2):
             sin(dlat / 2) ** 2 +
             cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
         )
-    ) * 6367
+    ) * EARTH_RADIUS
 
 
 def get_distance_to_bar(bar_data, longitude, latitude):
@@ -114,12 +117,10 @@ def parse_arguments():
 
 def parse_coordinates(coord_string):
     try:
-        longitude, latitude = [
-            float(number) for number in coord_string.split()
-        ]
+        longitude, latitude = map(float, coord_string.split())
         return longitude, latitude
-    except ValueError:
-        return None
+    except (TypeError, ValueError):
+        return None, None
 
 
 if __name__ == '__main__':
