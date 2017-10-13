@@ -34,9 +34,9 @@ def get_bar_phone(feature):
 
 def get_bar_main_info(features):
     bar_info = \
-        'Name: {}\n' \
-        'Address: {}\n' \
-        'Phone number: {}'.format(
+        'Name:          {}\n' \
+        'Address:       {}\n' \
+        'Phone number:  {}'.format(
             get_bar_name(features),
             get_bar_address(features),
             get_bar_phone(features)
