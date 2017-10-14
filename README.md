@@ -8,7 +8,7 @@ This script requires Python 3.5 (or higher) installed on your machine
 
 A launching on Linux:
 
-```#!bash
+```bash
 # possibly requires call of python3 executive instead of just python
 $ python bars.py data.json 
 Enter a longitude and a latitude: 37.657179 55.758637
@@ -29,7 +29,7 @@ Phone number:  (495) 970-17-80
 The launch on Windows is similar.
 
 To download a file containing JSON information about bars use the following command
-```#!bash
+```bash
 # possibly requires call of python3 executive instead of just python
 $ python download_bars_data.py data.json
 ```
@@ -37,7 +37,7 @@ Note, that you have to set **_MOS_RU_API_KEY_** environment variable to download
 To recieve API key visit [Open Data Portal API](https://apidata.mos.ru/) site.
 
 Example of setting the enviromnent on Linux:
-```#!bash
+```bash
 $ export MOS_RU_API_KEY=<your API key>
 ```
 
