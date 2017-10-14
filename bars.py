@@ -7,9 +7,6 @@ from math import sqrt
 from math import radians
 
 
-EARTH_RADIUS = 6367
-
-
 def get_bars_features(bar_data):
     return bar_data['features']
 
@@ -51,6 +48,7 @@ def get_bar_geometry(feature):
 
 
 def calculate_distance(longitude1, latitude1, longitude2, latitude2):
+    earth_radius = 6367
     lon1, lat1, lon2, lat2 = map(
         radians, [longitude1, latitude1, longitude2, latitude2]
     )
@@ -61,7 +59,7 @@ def calculate_distance(longitude1, latitude1, longitude2, latitude2):
             sin(dlat / 2) ** 2 +
             cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
         )
-    ) * EARTH_RADIUS
+    ) * earth_radius
 
 
 def get_distance_to_bar(bar_data, longitude, latitude):
@@ -130,9 +128,8 @@ if __name__ == '__main__':
     if not bars_data:
         exit(
             'Unable to read {}\n'
-            'To download it try the following command:\n'
-            'python download_bars_data.py {}'.format(
-                data_path, data_path
+            'To download it try to use download_bars_data.py script'.format(
+                data_path
             )
         )
     longitude, latitude = parse_coordinates(

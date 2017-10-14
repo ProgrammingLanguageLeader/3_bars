@@ -9,7 +9,8 @@ This script requires Python 3.5 (or higher) installed on your machine
 A launching on Linux:
 
 ```#!bash
-$ python bars.py data.json # possibly requires call of python3 executive instead of just python
+# possibly requires call of python3 executive instead of just python
+$ python bars.py data.json 
 Enter a longitude and a latitude: 37.657179 55.758637
 The biggest bar
 Name:          Спорт бар «Красная машина»
@@ -29,9 +30,16 @@ The launch on Windows is similar.
 
 To download a file containing JSON information about bars use the following command
 ```#!bash
+# possibly requires call of python3 executive instead of just python
 $ python download_bars_data.py data.json
 ```
 Note, that you have to set **_MOS_RU_API_KEY_** environment variable to download using this script.
+To recieve API key visit [Open Data Portal API](https://apidata.mos.ru/) site.
+
+Example of setting the enviromnent on Linux:
+```#!bash
+$ export MOS_RU_API_KEY=<your API key>
+```
 
 # Project Goals
 
