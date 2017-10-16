@@ -7,44 +7,33 @@ from math import sqrt
 from math import radians
 
 
-def get_bars_features(bar_data):
-    return bar_data['features']
+def get_bars_features_list(bars_data):
+    return bars_data['features']
 
 
-def get_bar_attributes(feature):
-    return feature['properties']['Attributes']
+def get_bar_attributes(bar_data):
+    return bar_data['properties']['Attributes']
 
 
-def get_bar_seats_count(feature):
-    return get_bar_attributes(feature)['SeatsCount']
+def get_bar_seats_count(bar_data):
+    return get_bar_attributes(bar_data)['SeatsCount']
 
 
-def get_bar_name(feature):
-    return get_bar_attributes(feature)['Name']
-
-
-def get_bar_address(feature):
-    return get_bar_attributes(feature)['Address']
-
-
-def get_bar_phone(feature):
-    return get_bar_attributes(feature)['PublicPhone'][0]['PublicPhone']
-
-
-def get_bar_main_info(features):
-    bar_info = \
+def get_bar_main_info_string(bar_data):
+    attributes = get_bar_attributes(bar_data)
+    info_string = \
         'Name:          {}\n' \
         'Address:       {}\n' \
         'Phone number:  {}'.format(
-            get_bar_name(features),
-            get_bar_address(features),
-            get_bar_phone(features)
+            attributes['Name'],
+            attributes['Address'],
+            attributes['PublicPhone'][0]['PublicPhone']
         )
-    return bar_info
+    return info_string
 
 
-def get_bar_geometry(feature):
-    return feature['geometry']['coordinates']
+def get_bar_coordinates(features):
+    return features['geometry']['coordinates']
 
 
 def calculate_distance(longitude1, latitude1, longitude2, latitude2):
@@ -62,8 +51,8 @@ def calculate_distance(longitude1, latitude1, longitude2, latitude2):
     ) * earth_radius
 
 
-def get_distance_to_bar(bar_data, longitude, latitude):
-    bar_longitude, bar_latitude = get_bar_geometry(bar_data)
+def get_distance_to_bar(bar_features, longitude, latitude):
+    bar_longitude, bar_latitude = get_bar_coordinates(bar_features)
     return calculate_distance(
         bar_longitude, bar_latitude,
         longitude, latitude
@@ -78,23 +67,23 @@ def load_data(filepath):
         return None
 
 
-def get_biggest_bar(bars_data):
+def get_biggest_bar(bars_features):
     return max(
-        get_bars_features(bars_data),
-        key=lambda bar_data: get_bar_seats_count(bar_data)
+        bars_features,
+        key=get_bar_seats_count
     )
 
 
-def get_smallest_bar(bars_data):
+def get_smallest_bar(bars_features):
     return min(
-        get_bars_features(bars_data),
-        key=lambda bar_data: get_bar_seats_count(bar_data)
+        bars_features,
+        key=get_bar_seats_count
     )
 
 
-def get_closest_bar(bars_data, longitude, latitude):
+def get_closest_bar(bars_features, longitude, latitude):
     return min(
-        get_bars_features(bars_data),
+        bars_features,
         key=lambda bar_data: get_distance_to_bar(
             bar_data, longitude, latitude
         )
@@ -132,17 +121,18 @@ if __name__ == '__main__':
                 data_path
             )
         )
+    bars_features = get_bars_features_list(bars_data)
     longitude, latitude = parse_coordinates(
         input('Enter a longitude and a latitude: ')
     )
     if not longitude or not latitude:
         exit('Check input data')
-    biggest = get_biggest_bar(bars_data)
-    smallest = get_smallest_bar(bars_data)
-    closest = get_closest_bar(bars_data, longitude, latitude)
+    biggest = get_biggest_bar(bars_features)
+    smallest = get_smallest_bar(bars_features)
+    closest = get_closest_bar(bars_features, longitude, latitude)
     print('The biggest bar')
-    print(get_bar_main_info(biggest))
+    print(get_bar_main_info_string(biggest))
     print('The smallest bar')
-    print(get_bar_main_info(smallest))
+    print(get_bar_main_info_string(smallest))
     print('The closest bar')
-    print(get_bar_main_info(closest))
+    print(get_bar_main_info_string(closest))
