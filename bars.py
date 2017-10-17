@@ -7,7 +7,7 @@ from math import sqrt
 from math import radians
 
 
-def get_bars_features_list(bars_data):
+def get_bars(bars_data):
     return bars_data['features']
 
 
@@ -121,7 +121,7 @@ if __name__ == '__main__':
                 data_path
             )
         )
-    bars_features = get_bars_features_list(bars_data)
+    bars_features = get_bars(bars_data)
     longitude, latitude = parse_coordinates(
         input('Enter a longitude and a latitude: ')
     )
